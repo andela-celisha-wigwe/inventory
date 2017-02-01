@@ -52,5 +52,13 @@ class InventoriesController extends Controller
      */
     public function show($id)
     {
+        $inventory = Inventory::find($id);
+        list($message, $status) = $inventory ? ['Inventory found.', 200] : ['Inventory not found.', 404];
+
+        return response()->json([
+            'message' => $message,
+            'data' => $inventory,
+            'link' => route('inventories.index'),
+        ], $status);
     }
 }

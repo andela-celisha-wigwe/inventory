@@ -73,4 +73,39 @@ class InventoryTest extends TestCase
 		$this->assertEquals(99, $content->count);
 		$this->assertCount(99, $content->data);
     }
+
+    public function testAPIReturnsIndividualInventory()
+    {
+    	$this->manufactureInventories(99);
+    	\App\Inventory::create([
+    		'name' => 'Inventory 2',
+    		'description' => 'All about another inventory'
+    	]);
+
+    	$response = $this->call('GET', '/api/v1/inventories/100');
+		
+		$this->assertEquals(200, $response->status());
+
+		$content = json_decode($response->content());
+		$this->assertEquals("Inventory found.", $content->message);
+		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
+
+		$data = $content->data;
+		$this->assertEquals("Inventory 2", $data->name);
+		$this->assertEquals("All about another inventory", $data->description);
+    }
+
+    public function testAPIReturnsExpectedResponseWhenRequestedInventoryIsNotFound()
+    {
+    	$this->manufactureInventories(99);
+
+    	$response = $this->call('GET', '/api/v1/inventories/100');
+		
+		$this->assertEquals(404, $response->status());
+
+		$content = json_decode($response->content());
+		$this->assertEquals("Inventory not found.", $content->message);
+		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
+		$this->assertNull($content->data);
+    }
 }
