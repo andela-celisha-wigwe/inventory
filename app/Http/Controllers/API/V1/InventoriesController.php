@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API\V1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Inventory;
+use App\Http\Requests\NewInventoryRequest;
+
 class InventoriesController extends Controller
 {
     /**
@@ -23,9 +26,14 @@ class InventoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NewInventoryRequest $request)
     {
-        //
+        $inventory = Inventory::create($request->all());
+        return response()->json([
+            'message' => 'New inventory created',
+            'data' => $inventory,
+            'link' => route('inventories.show', ['inventory' => $inventory->id]),
+        ], 201);
     }
 
     /**
@@ -36,6 +44,5 @@ class InventoriesController extends Controller
      */
     public function show($id)
     {
-        //
     }
 }

@@ -11,4 +11,8 @@ class Inventory extends Model
 	 * @var string
 	 */
     protected $table = 'inventories';
+
+    protected $fillable = [
+    	'name', 'description'
+    ];
 }
