@@ -15,9 +15,11 @@ class InventoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $inventories = Inventory::all();
+        $condition = env('DB_CONNECTION') == 'pgsql' ? 'ILIKE' : 'LIKE';
+        $inventories = Inventory::where('name', $condition, "%$request->name%")->where('description', $condition, "%$request->description%")->get();
+
         list($message, $status) = $inventories->count() ? ['All inventories.', 200] : ['No inventories.', 404];
 
         return response()->json([

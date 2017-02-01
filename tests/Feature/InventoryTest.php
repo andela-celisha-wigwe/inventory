@@ -46,9 +46,62 @@ class InventoryTest extends TestCase
 		$this->assertEquals(['The description must be a string.'], $errors->description);
     }
 
-    public function testAPIReturnsExpectedResponseWhenThereAreNoInventories()
+  //   public function testAPIReturnsExpectedResponseWhenThereAreNoInventories()
+  //   {
+  //   	$response = $this->call('GET', '/api/v1/inventories');
+		
+		// $this->assertEquals(404, $response->status());
+
+		// $content = json_decode($response->content());
+		// $this->assertEquals("No inventories.", $content->message);
+		// $this->assertEquals("http://localhost/api/v1/inventories", $content->link);
+		// $this->assertEquals(0, $content->count);
+		// $this->assertCount(0, $content->data);
+  //   }
+
+  //   public function testAPIReturnsExpectedResponseWhenThereAreInventories()
+  //   {
+  //   	$this->manufactureInventories(99);
+
+  //   	$response = $this->call('GET', '/api/v1/inventories');
+		
+		// $this->assertEquals(200, $response->status());
+
+		// $content = json_decode($response->content());
+		// $this->assertEquals("All inventories.", $content->message);
+		// $this->assertEquals("http://localhost/api/v1/inventories", $content->link);
+		// $this->assertEquals(99, $content->count);
+		// $this->assertCount(99, $content->data);
+  //   }
+
+    public function testAPIReturnsExpectedResponseWhenThereAreInventoriesWithSearchParameters()
     {
-    	$response = $this->call('GET', '/api/v1/inventories');
+    	$this->manufactureInventories(99);
+    	\App\Inventory::create([
+    		'name' => 'Searchable Inventory',
+    		'description' => 'All about this searchable inventory'
+    	]);
+
+    	$response = $this->call('GET', '/api/v1/inventories?name=searchable&description=about');
+		
+		$this->assertEquals(200, $response->status());
+
+		$content = json_decode($response->content());
+		$this->assertEquals("All inventories.", $content->message);
+		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
+		$this->assertEquals(1, $content->count);
+		$this->assertCount(1, $content->data);
+    }
+
+    public function testAPIReturnsExpectedResponseWhenThereAreNoInventoriesWithSearchParameters()
+    {
+    	$this->manufactureInventories(99);
+    	\App\Inventory::create([
+    		'name' => 'Searchable Inventory',
+    		'description' => 'All about this searchable inventory'
+    	]);
+
+    	$response = $this->call('GET', '/api/v1/inventories?name=notsearchable&description=notabout');
 		
 		$this->assertEquals(404, $response->status());
 
@@ -57,21 +110,6 @@ class InventoryTest extends TestCase
 		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
 		$this->assertEquals(0, $content->count);
 		$this->assertCount(0, $content->data);
-    }
-
-    public function testAPIReturnsExpectedResponseWhenThereAreInventories()
-    {
-    	$this->manufactureInventories(99);
-
-    	$response = $this->call('GET', '/api/v1/inventories');
-		
-		$this->assertEquals(200, $response->status());
-
-		$content = json_decode($response->content());
-		$this->assertEquals("All inventories.", $content->message);
-		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
-		$this->assertEquals(99, $content->count);
-		$this->assertCount(99, $content->data);
     }
 
     public function testAPIReturnsIndividualInventory()
