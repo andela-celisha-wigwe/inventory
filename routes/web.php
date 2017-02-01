@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['prefix' => '/api/v1'], function () {
+
+	Route::resource('/inventories', API\V1\InventoriesController::class, [
+		'only' => ['index', 'show', 'store']
+	]);
+
 });
