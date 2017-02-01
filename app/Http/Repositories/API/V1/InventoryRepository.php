@@ -13,6 +13,12 @@ class InventoryRepository
 	 */
 	private $condition;
 
+	/**
+	 * $allowedOrders The allowed orders to be used for sorting a collection
+	 * @var array
+	 */
+	private $allowedOrders = ["asc", "desc"];
+
 	public function __construct()
 	{
 		$this->condition = env('DB_CONNECTION') == 'pgsql' ? 'ILIKE' : 'LIKE';
@@ -24,9 +30,17 @@ class InventoryRepository
 	 * @param  string $description 	The description name to be searched
 	 * @return array             	A collection of Inventories
 	 */
-	public function getInventories($name, $description = "")
+	public function getInventories($name, $description, $by = "name", $order = "asc", $limit = null)
 	{
-		return Inventory::where('name', $this->condition, "%$name%")->where('description', $this->condition, "%$description%")->get();
+		$by = is_null($by) ? "name" : $by;
+		$order = is_null($order) || !in_array($order, $this->allowedOrders) ? "asc" : $order;
+		$query = Inventory::where('name', $this->condition, "%$name%")
+							->where('description', $this->condition, "%$description%")
+							->orderBy($by, $order);
+		if (!is_null($limit)) {
+			$query = $query->take($limit);
+		}
+		return $query->get();
 	}
 
 	/**

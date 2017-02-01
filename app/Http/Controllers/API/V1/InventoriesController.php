@@ -33,7 +33,7 @@ class InventoriesController extends Controller
      */
     public function index(Request $request)
     {
-        $inventories = $this->inventoryRepo->getInventories($request->name, $request->description);
+        $inventories = $this->inventoryRepo->getInventories($request->name, $request->description, $request->by, $request->order, $request->limit);
 
         list($message, $status) = $inventories->count() ? ['All inventories.', 200] : ['No inventories.', 404];
 
