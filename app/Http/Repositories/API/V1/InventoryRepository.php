@@ -40,7 +40,14 @@ class InventoryRepository
 		if (!is_null($limit)) {
 			$query = $query->take($limit);
 		}
-		return $query->get();
+		return [$query->get(), [
+				'name' => $name,
+	            'description' => $description,
+	            'order' => $order,
+	            'by' => $by,
+	            'limit' => $limit,
+			]
+		];
 	}
 
 	/**

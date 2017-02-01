@@ -57,6 +57,13 @@ class InventoryTest extends TestCase
 		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
 		$this->assertEquals(0, $content->count);
 		$this->assertCount(0, $content->data);
+
+        $params = $content->params;
+        $this->assertNull($params->name);
+        $this->assertNull($params->description);
+        $this->assertEquals("asc", $params->order);
+        $this->assertEquals("name", $params->by);
+        $this->assertNull($params->limit);
     }
 
     public function testAPIReturnsExpectedResponseWhenThereAreInventoriesAndInDescendingOrder()
@@ -82,6 +89,13 @@ class InventoryTest extends TestCase
 
 		$inventory = $content->data[0];
 		$this->assertEquals($description, $inventory->description);
+
+        $params = $content->params;
+        $this->assertNull($params->name);
+        $this->assertNull($params->description);
+        $this->assertEquals("desc", $params->order);
+        $this->assertEquals("description", $params->by);
+        $this->assertNull($params->limit);
     }
 
     public function testAPIReturnsExpectedResponseWhenThereAreInventoriesAndInAscendingOrder()
@@ -106,6 +120,13 @@ class InventoryTest extends TestCase
 
 		$inventory = $content->data[0];
 		$this->assertEquals($name, $inventory->name);
+
+        $params = $content->params;
+        $this->assertNull($params->name);
+        $this->assertNull($params->description);
+        $this->assertEquals("asc", $params->order);
+        $this->assertEquals("name", $params->by);
+        $this->assertNull($params->limit);
     }
 
     public function testAPIReturnsExpectedResponseWhenThereAreInventoriesWithSearchParameters()
@@ -140,6 +161,13 @@ class InventoryTest extends TestCase
 		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
 		$this->assertEquals(10, $content->count);
 		$this->assertCount(10, $content->data);
+
+        $params = $content->params;
+        $this->assertNull($params->name);
+        $this->assertNull($params->description);
+        $this->assertEquals("asc", $params->order);
+        $this->assertEquals("name", $params->by);
+        $this->assertEquals(10, $params->limit);
     }
 
     public function testAPIReturnsExpectedResponseWhenThereAreNoInventoriesWithSearchParameters()
@@ -159,6 +187,13 @@ class InventoryTest extends TestCase
 		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
 		$this->assertEquals(0, $content->count);
 		$this->assertCount(0, $content->data);
+
+        $params = $content->params;
+        $this->assertEquals("notsearchable", $params->name);
+        $this->assertEquals("notabout", $params->description);
+        $this->assertEquals($params->order, "asc");
+        $this->assertEquals($params->by, "name");
+        $this->assertNull($params->limit);
     }
 
     public function testAPIReturnsIndividualInventory()
