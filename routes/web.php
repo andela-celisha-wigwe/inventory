@@ -17,6 +17,12 @@ Route::get('/', function () {
 
 Route::group(['prefix' => '/api/v1'], function () {
 
+	Route::get('/', function () {
+		return response()->json([
+			'message' => "Roy's Inventory API - Home",
+		], 200);
+	});
+
 	Route::resource('/inventories', API\V1\InventoriesController::class, [
 		'only' => ['index', 'show', 'store']
 	]);
