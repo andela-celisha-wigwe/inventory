@@ -46,33 +46,33 @@ class InventoryTest extends TestCase
 		$this->assertEquals(['The description must be a string.'], $errors->description);
     }
 
-  //   public function testAPIReturnsExpectedResponseWhenThereAreNoInventories()
-  //   {
-  //   	$response = $this->call('GET', '/api/v1/inventories');
+    public function testAPIReturnsExpectedResponseWhenThereAreNoInventories()
+    {
+    	$response = $this->call('GET', '/api/v1/inventories');
 		
-		// $this->assertEquals(404, $response->status());
+		$this->assertEquals(404, $response->status());
 
-		// $content = json_decode($response->content());
-		// $this->assertEquals("No inventories.", $content->message);
-		// $this->assertEquals("http://localhost/api/v1/inventories", $content->link);
-		// $this->assertEquals(0, $content->count);
-		// $this->assertCount(0, $content->data);
-  //   }
+		$content = json_decode($response->content());
+		$this->assertEquals("No inventories.", $content->message);
+		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
+		$this->assertEquals(0, $content->count);
+		$this->assertCount(0, $content->data);
+    }
 
-  //   public function testAPIReturnsExpectedResponseWhenThereAreInventories()
-  //   {
-  //   	$this->manufactureInventories(99);
+    public function testAPIReturnsExpectedResponseWhenThereAreInventories()
+    {
+    	$this->manufactureInventories(99);
 
-  //   	$response = $this->call('GET', '/api/v1/inventories');
+    	$response = $this->call('GET', '/api/v1/inventories');
 		
-		// $this->assertEquals(200, $response->status());
+		$this->assertEquals(200, $response->status());
 
-		// $content = json_decode($response->content());
-		// $this->assertEquals("All inventories.", $content->message);
-		// $this->assertEquals("http://localhost/api/v1/inventories", $content->link);
-		// $this->assertEquals(99, $content->count);
-		// $this->assertCount(99, $content->data);
-  //   }
+		$content = json_decode($response->content());
+		$this->assertEquals("All inventories.", $content->message);
+		$this->assertEquals("http://localhost/api/v1/inventories", $content->link);
+		$this->assertEquals(99, $content->count);
+		$this->assertCount(99, $content->data);
+    }
 
     public function testAPIReturnsExpectedResponseWhenThereAreInventoriesWithSearchParameters()
     {

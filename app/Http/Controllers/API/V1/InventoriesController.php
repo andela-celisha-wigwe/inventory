@@ -4,21 +4,36 @@ namespace App\Http\Controllers\API\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\API\V1\InventoryRepository;
 
-use App\Inventory;
 use App\Http\Requests\NewInventoryRequest;
 
 class InventoriesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * $inventoryRepo InventoryRepository instance
+     * to handle transacetion with inventory table
+     * 
+     * @var InventoryRepository
+     */
+    protected $inventoryRepo;
+
+    /**
+     * Instantiate the Inventory repository
+     */
+    public function __construct()
+    {
+        $this->inventoryRepo = new InventoryRepository();
+    }
+
+    /**
+     * Display a listing of inventories.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $condition = env('DB_CONNECTION') == 'pgsql' ? 'ILIKE' : 'LIKE';
-        $inventories = Inventory::where('name', $condition, "%$request->name%")->where('description', $condition, "%$request->description%")->get();
+        $inventories = $this->inventoryRepo->getInventories($request->name, $request->description);
 
         list($message, $status) = $inventories->count() ? ['All inventories.', 200] : ['No inventories.', 404];
 
@@ -31,14 +46,14 @@ class InventoriesController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created inventory in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(NewInventoryRequest $request)
     {
-        $inventory = Inventory::create($request->all());
+        $inventory = $this->inventoryRepo->storeInventory($request->all());
         return response()->json([
             'message' => 'New inventory created',
             'data' => $inventory,
@@ -47,14 +62,14 @@ class InventoriesController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified inventory.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $inventory = Inventory::find($id);
+        $inventory = $this->inventoryRepo->getInventory((int) $id);
         list($message, $status) = $inventory ? ['Inventory found.', 200] : ['Inventory not found.', 404];
 
         return response()->json([
