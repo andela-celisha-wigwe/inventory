@@ -39,6 +39,12 @@ return [
             'prefix' => '',
         ],
 
+        'test' => [
+            'driver' => 'sqlite',
+            'database' => env('DB_DATABASE'),
+            'prefix' => '',
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),

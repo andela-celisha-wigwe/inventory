@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/', function () {
+	return "Welcome to Roy's Inventory API.";
+});
+
 Route::group(['prefix' => '/api/v1'], function () {
 
 	Route::resource('/inventories', API\V1\InventoriesController::class, [
