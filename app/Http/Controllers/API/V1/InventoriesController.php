@@ -17,7 +17,15 @@ class InventoriesController extends Controller
      */
     public function index()
     {
-        //
+        $inventories = Inventory::all();
+        list($message, $status) = $inventories->count() ? ['All inventories.', 200] : ['No inventories.', 404];
+
+        return response()->json([
+            'message' => $message,
+            'data' => $inventories,
+            'count' => $inventories->count(),
+            'link' => route('inventories.index')
+        ], $status);
     }
 
     /**

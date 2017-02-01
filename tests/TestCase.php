@@ -30,4 +30,9 @@ abstract class TestCase extends BaseTestCase
             \DB::table($table)->truncate();
         });
     }
+
+    public function manufactureInventories($number = 50)
+    {
+        factory(\App\Inventory::class, $number)->create();
+    }
 }
